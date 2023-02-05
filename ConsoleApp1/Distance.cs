@@ -31,5 +31,15 @@ namespace ConsoleApp1
         {
             return nb * nb;
         }
+
+
+        public static double Euclidienne(NodeBis n1, NodeBis n2)
+        {
+            double x = (n2.x - n1.x);
+            double y = (n2.y - n1.y);
+            return Math.Sqrt(Carre(x) + Carre(y));
+        }
+
+
     }
 }

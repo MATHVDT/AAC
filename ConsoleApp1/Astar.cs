@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Runtime.ConstrainedExecution;
 using System.Text;
@@ -8,14 +10,13 @@ using System.Threading.Tasks;
 
 namespace ConsoleApp1
 {
-
-
-
     internal class Astar
     {
+        SortedSet<Node> _openList = new SortedSet<Node>(Comparer<Node>.Create((x, y) =>
+        { // trie par ordre décroissant
+            return y.Cout_f.CompareTo(x.Cout_f);
+        }));
 
-        private List<Node> _openList = new();
-        //private List<Node> _closeList = new();
         SortedSet<Node> _closeList = new SortedSet<Node>(Comparer<Node>.Create((x, y) =>
         { // trie par ordre décroissant
             return y.Cout_f.CompareTo(x.Cout_f);
@@ -31,8 +32,6 @@ namespace ConsoleApp1
         /// <param name="nodeFinal">Noeud finale de la recherche.</param>
         void ajouter_cases_adjacentes(Node nodeBase, Node nodeFinal)
         {
-            //Node tmpNode = new Node();
-
             NodeCara nodeCara = new NodeCara();
 
             var listVoisins = nodeBase.GetNodesVoisins();
@@ -43,89 +42,59 @@ namespace ConsoleApp1
                 if (nodeVoisin.typeNode == TypeNode.Obstacle) { continue; }
 
                 // le noeud n'est pas déjà présent dans la liste fermée 
-                if (!_closeList.Contains(nodeVoisin))
+                if (!_closeList.Contains(nodeVoisin, new NodeEqualityById()))
                 {
-                    /* calcul du cout G du noeud en cours d'étude : cout du parent + distance jusqu'au parent */
+                    // calcul du cout G du noeud en cours d'étude : cout du parent + distance jusqu'au parent 
                     nodeCara.Cout_g = nodeBase.Cout_g + Distance.Euclidienne(nodeVoisin, nodeBase);
 
-                    ///* calcul du cout G du noeud en cours d'étude : cout du parent + distance jusqu'au parent */
-                    //tmp.cout_g = liste_fermee[n].cout_g + distance(i, j, n.first, n.second);
-
-                    /* calcul du cout H du noeud à la destination */
+                    // calcul du cout H du noeud à la destination
                     nodeCara.Cout_h = Distance.Euclidienne(nodeVoisin, nodeFinal);
                     nodeCara.Cout_f = nodeCara.Cout_g + nodeCara.Cout_f;
                     nodeCara.Parent = nodeBase;
 
-                    /* calcul du cout H du noeud à la destination */
-                    //tmp.cout_h = distance(i, j, arrivee.x, arrivee.y);
-                    //tmp.cout_f = tmp.cout_g + tmp.cout_h;
-                    //tmp.parent = n;
-
-                    if (_openList.Contains(nodeVoisin))
+                    if (_openList.Contains(nodeVoisin, new NodeEqualityById()))
                     {
                         // le noeud est déjà présent dans la liste ouverte, il faut comparer les couts 
                         if (nodeCara.Cout_f < nodeVoisin.Cout_f)
                         {
                             // si le nouveau chemin est meilleur, on met à jour 
                             nodeVoisin.SetNodeCara(nodeCara);
+                            //_openList.Add(nodeVoisin); // Deja dans la liste normalement
                         }
                         // le noeud courant a un moins bon chemin, on ne change rien 
-
                     }
                     else
                     {
                         // le noeud n'est pas présent dans la liste ouverte, on l'y ajoute
+                        nodeVoisin.SetNodeCara(nodeCara);
                         _openList.Add(nodeVoisin);
                     }
-
-                    //if (deja_present_dans_liste(it, liste_ouverte))
-                    //{
-                    /* le noeud est déjà présent dans la liste ouverte, il faut comparer les couts */
-                    //    if (tmp.cout_f < liste_ouverte[it].cout_f)
-                    //    {
-                    //        /* si le nouveau chemin est meilleur, on met à jour */
-                    //        liste_ouverte[it] = tmp;
-                    //    }
-
-                    //    /* le noeud courant a un moins bon chemin, on ne change rien */
-                    //}
-                    //else
-                    //{
-                    //    /* le noeud n'est pas présent dans la liste ouverte, on l'y ajoute */
-                    //    liste_ouverte[pair<int, int>(i, j)] = tmp;
-                    //}
                 }
             }
         }
 
-
+        /// <summary>
+        /// Ajout d'un noeud à la liste fermée et doit donc le retirer de la liste ouverte.
+        /// </summary>
+        /// <param name="node">Noeud à ajouter.</param>
         public void ajouter_liste_fermee(Node node)
         {
-            //noeud & n = liste_ouverte[p];
-
             _closeList.Add(node);
-            //liste_fermee[p] = n;
 
             // il faut le supprimer de la liste ouverte, ce n'est plus une solution explorable 
             if (!_openList.Remove(node))
                 Console.WriteLine("Erreur, le noeud n'apparaît pas dans la liste ouverte, impossible à supprimer");
-
-
-            /* il faut le supprimer de la liste ouverte, ce n'est plus une solution explorable */
-            //if (liste_ouverte.erase(p) == 0)
-            //    cerr << "Erreur, le noeud n'apparaît pas dans la liste ouverte, impossible à supprimer" << endl;
-            //return;
         }
 
-
+        /// <summary>
+        /// Retrouve le chemin dans le bon ordre. Parcours du noeud final au noeud initial.
+        /// </summary>
+        /// <param name="nodeInitial"></param>
+        /// <param name="nodeFinal"></param>
+        /// <returns>Liste contenant les différents noeuds du chemin dans le bon ordre.</returns>
         public List<Node> retrouver_chemin(Node nodeInitial, Node nodeFinal)
         {
             // l'arrivée est le dernier élément de la liste fermée
-
-
-            /* l'arrivée est le dernier élément de la liste fermée */
-            // noeud & tmp = liste_fermee[std::pair<int, int>(arrivee.x, arrivee.y)];
-
             Node tmpNode = nodeFinal;
             List<Node> chemin = new List<Node>();
 
@@ -138,78 +107,55 @@ namespace ConsoleApp1
                 chemin.Insert(0, tmpNode);
             }
 
-            //struct point n;
-            //pair<int, int> prec;
-            //n.x = arrivee.x;
-            //n.y = arrivee.y;
-            //prec.first  = tmp.parent.first;
-            //prec.second = tmp.parent.second;
-            //chemin.push_front(n);
-
-            //while (prec != pair<int, int>(depart.parent.first, depart.parent.first)){
-            //    n.x = prec.first;
-            //    n.y = prec.second;
-            //    chemin.push_front(n);
-
-            //    tmp = liste_fermee[tmp.parent];
-            //    prec.first  = tmp.parent.first;
-            //    prec.second = tmp.parent.second;
-            //}
             return chemin;
         }
 
 
-        public void process(Node nodeInitial, Node nodeFinal)
+        public void process(Node nodeInitial, Node nodeFinal,
+            Node[,] graphe, bool printImage = false, string basePath = @"C:\Users\ma_th\Desktop\")
         {
+            // déroulement de l'algo A* 
+            Node courant = nodeInitial;
 
+            // ajout de courant dans la liste ouverte 
+            _openList.Add(courant);
+            _closeList.Add(courant);
+            ajouter_cases_adjacentes(courant, nodeFinal);
 
-            //arrivee.x = s->w - 1;
-            //arrivee.y = s->h - 1;
+            int cpt = 0;
 
-            //depart.parent.first = 0;
-            //depart.parent.second = 0;
+            // tant que la destination n'a pas été atteinte et qu'il reste des noeuds à explorer dans la liste ouverte
+            while ((courant.Id != nodeFinal.Id))
+            {
+                // on cherche le meilleur noeud de la liste ouverte, on sait qu'elle n'est pas vide donc il existe 
+                courant = _openList.ElementAt<Node>(0); // Premier élément car la liste est triée
+                Console.WriteLine($"{courant.Id}");
 
-            //pair<int, int> courant;
+                // on le passe dans la liste fermée, il ne peut pas déjà y être 
+                ajouter_liste_fermee(courant);
 
-            ///* déroulement de l'algo A* */
+                // on recommence la recherche des noeuds adjacents 
+                ajouter_cases_adjacentes(courant, nodeFinal);
 
-            ///* initialisation du noeud courant */
-            //courant.first = 0;
-            //courant.second = 0;
+                if (printImage)
+                {
+                    AffichageGraphe.SaveImage(graphe, _openList, _closeList, 50, basePath + "astar" + cpt + ".png");
+                    ++cpt;
+                }
+            }
 
-            ///* ajout de courant dans la liste ouverte */
-            //liste_ouverte[courant] = depart;
-            //ajouter_liste_fermee(courant);
-            //ajouter_cases_adjacentes(courant);
-
-            ///* tant que la destination n'a pas été atteinte et qu'il reste des noeuds à explorer dans la liste ouverte */
-            //while (!((courant.first == arrivee.x) && (courant.second == arrivee.y))
-            //        &&
-            //       (!liste_ouverte.empty())
-            //     )
-            //{
-
-            //    /* on cherche le meilleur noeud de la liste ouverte, on sait qu'elle n'est pas vide donc il existe */
-            //    courant = meilleur_noeud(liste_ouverte);
-
-            //    /* on le passe dans la liste fermée, il ne peut pas déjà y être */
-            //    ajouter_liste_fermee(courant);
-
-            //    /* on recommence la recherche des noeuds adjacents */
-            //    ajouter_cases_adjacentes(courant);
-            //}
-
-            ///* si la destination est atteinte, on remonte le chemin */
-            //if ((courant.first == arrivee.x) && (courant.second == arrivee.y))
-            //{
-            //    retrouver_chemin();
-
-            //    ecrire_bmp();
-            //}
-            //else
-            //{
-            //    /* pas de solution */
-            //}
+            // si la destination est atteinte, on remonte le chemin
+            if (courant.Id == nodeFinal.Id)
+            {
+                var chemin = retrouver_chemin(nodeInitial, nodeFinal);
+                Console.WriteLine("Chemin trouvé");
+            }
+            else
+            {
+                Console.WriteLine("Pas de solution.");
+            }
         }
+
+
     }
 }
