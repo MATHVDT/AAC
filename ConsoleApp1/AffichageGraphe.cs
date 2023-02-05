@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Drawing.Imaging;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ImageMagick;
 
 namespace ConsoleApp1
 {
@@ -87,5 +83,39 @@ namespace ConsoleApp1
             // Enregistrer l'image
             bmp.Save(filePath, ImageFormat.Png);
         }
+
+
+        public static void ImageToGif(string directory)
+        {
+            // Récupérer toutes les images au format "astarX.png"
+            string[] imageFiles = Directory.GetFiles(directory, "astar*.png");
+
+            // Créer un GIF à partir des images
+            using (MagickImageCollection collection = new MagickImageCollection())
+            {
+                foreach (string imageFile in imageFiles)
+                {
+                    collection.Add(new MagickImage(imageFile));
+                    collection[collection.Count - 1].AnimationDelay = 50;
+                }
+
+
+                // Optionally reduce colors
+                QuantizeSettings settings = new QuantizeSettings();
+                settings.Colors = 256;
+
+                collection.Optimize();
+                string animationPath = directory + "animation.gif";
+                collection.Write(animationPath);
+                //collection.wai
+            }
+            
+            // Supprimer les images originales
+            //foreach (string imageFile in imageFiles)
+            //{
+            //    File.Delete(imageFile);
+            //}
+        }
     }
+
 }

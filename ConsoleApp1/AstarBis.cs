@@ -85,6 +85,7 @@ namespace ConsoleApp1
                 if (printImage)
                 {
                     AffichageGraphe.SaveImage(graphe, 50, basePath + "astar" + cpt + ".png");
+                    AffichageGraphe.ImageToGif(basePath);
                     ++cpt;
                 }
             }
