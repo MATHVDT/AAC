@@ -72,16 +72,12 @@ namespace ConsoleApp1
                     for (int j = 0; j < graphe.GetLength(1); j++)
                     {
                         Node n = graphe[i, j];
-
                         Brush brush = new SolidBrush(n.ColorCase);
-
                         g.FillRectangle(brush, j * nodeSize, i * nodeSize, nodeSize, nodeSize);
                     }
                 }
             }
-
-
-            Console.WriteLine($" graphe.GetLength(0):{graphe.GetLength(0)},  graphe.GetLength(1):{graphe.GetLength(1)}");
+            
             // Enregistrer l'image
             bmp.Save(filePath, ImageFormat.Png);
         }
@@ -90,19 +86,12 @@ namespace ConsoleApp1
         public static void ImageToGif(string directory)
         {
             // Récupérer toutes les images au format "astarX.png"
-            string[] imageFilesTab = Directory.GetFiles(directory, "astar*.png");
-            int nbFichiers = Directory.GetFiles(directory).Length;
+            int nbFichiers = Directory.GetFiles(directory, "astar*.png").Length;
 
             List<string> imageFiles = new List<string>();
-            for (int i = 0; i < nbFichiers - 1; i++)
+            for (int i = 0; i < nbFichiers; i++)
             {
                 imageFiles.Add(directory + "astar" + i + ".png");
-            }
-
-
-            foreach (var p in imageFiles)
-            {
-                Console.WriteLine(p);
             }
 
             // Créer un GIF à partir des images
