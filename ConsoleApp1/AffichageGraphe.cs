@@ -61,7 +61,7 @@ namespace ConsoleApp1
             bmp.Save(filePath, ImageFormat.Png);
         }
 
-        public static void SaveImage(NodeBis[,] graphe, int nodeSize, string filePath)
+        public static void SaveImage(Node[,] graphe, int nodeSize, string filePath)
         {
             Bitmap bmp = new Bitmap(width: graphe.GetLength(0) * nodeSize, height: graphe.GetLength(1) * nodeSize);
             using (Graphics g = Graphics.FromImage(bmp))
@@ -71,7 +71,7 @@ namespace ConsoleApp1
                 {
                     for (int j = 0; j < graphe.GetLength(1); j++)
                     {
-                        NodeBis n = graphe[i, j];
+                        Node n = graphe[i, j];
 
                         Brush brush = new SolidBrush(n.ColorCase);
 

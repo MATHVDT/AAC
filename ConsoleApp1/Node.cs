@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,25 +9,6 @@ using System.Threading.Tasks;
 namespace ConsoleApp1
 {
     enum TypeNode { Obstacle = 0, Libre = 1 }
-
-    struct NodeCara
-    {
-        public double Cout_g; // le cout pour aller du point de départ au nœud considéré
-        public double Cout_h; // le cout pour aller du nœud considéré au point de destination
-        public double Cout_f; // somme des précédents, mais mémorisé pour ne pas le recalculer à chaque fois
-
-        public Node Parent;
-    }
-    internal class NodeEqualityById : IEqualityComparer<Node>
-    {
-        public bool Equals(Node? x, Node? y) => x?.Id == y?.Id;
-
-        public int GetHashCode([DisallowNull] Node obj)
-        {
-            return obj.Id;
-        }
-    }
-
 
     internal class Node
     {
@@ -41,27 +23,32 @@ namespace ConsoleApp1
         // Liste voisin
         private List<Node> _voisins;
 
-        private NodeCara _nodeCara;
+        public double Cout_g;
+        public double Cout_h;
+        public double Cout_f;
 
-        public double Cout_g { get => _nodeCara.Cout_g; }
-        public double Cout_h { get => _nodeCara.Cout_h; }
-        public double Cout_f { get => _nodeCara.Cout_f; }
+        public Node? Parent;
 
-        public Node Parent { get => _nodeCara.Parent; }
+        public Color ColorCase;
 
         public Node(int id, double x, double y, TypeNode typeNode)
         {
             Id = id;
             this.x = x;
             this.y = y;
+            Cout_g = Cout_h = Cout_f = 0;
+            Parent = null;
             this.typeNode = typeNode;
             _voisins = new List<Node>();
-            _nodeCara = new NodeCara()
+
+            if (typeNode == TypeNode.Obstacle)
             {
-                Cout_f = 0,
-                Cout_g = 0,
-                Cout_h = 0
-            };
+                ColorCase = Color.Black;
+            }
+            else
+            {
+                ColorCase = Color.White;
+            }
         }
 
         public void AddVoisin(Node voisin)
@@ -77,14 +64,8 @@ namespace ConsoleApp1
         public List<Node> GetNodesVoisins(int lvlDetail = 0)
         {
             return _voisins;
+
+
         }
-
-
-        public void SetNodeCara(NodeCara cara)
-        {
-            _nodeCara = cara;
-        }
-
-
     }
 }

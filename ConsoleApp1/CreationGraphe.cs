@@ -8,8 +8,6 @@ namespace ConsoleApp1
 {
     internal class CreationGraphe
     {
-
-
         public static Node[,] LectureFichier(string fichier)
         {
             string fileContent = File.ReadAllText(fichier);
@@ -30,74 +28,7 @@ namespace ConsoleApp1
                 {
                     // Récupération du type
                     type = (TypeNode)Enum.ToObject(typeof(TypeNode), int.Parse(elements[j]));
-                    Node n = new Node((i - 1) * columnCount  + j,
-                                    j, i - 1, type);
-                    graphe[i - 1, j] = n;
-                }
-            }
-
-            // Ajout voisin
-            for (int i = 0; i < rowCount; i++)
-            {
-                for (int j = 0; j < columnCount; j++)
-                {
-
-                    if (i > 0)
-                    {
-                        if (graphe[i - 1, j].typeNode == TypeNode.Libre)
-                        {
-                            graphe[i, j].AddVoisin(graphe[i - 1, j]);
-                        }
-                    }
-                    if (i < rowCount - 1)
-                    {
-                        if (graphe[i + 1, j].typeNode == TypeNode.Libre)
-                        {
-                            graphe[i, j].AddVoisin(graphe[i + 1, j]);
-                        }
-                    }
-                    if (j > 0)
-                    {
-                        if (graphe[i, j - 1].typeNode == TypeNode.Libre)
-                        {
-                            graphe[i, j].AddVoisin(graphe[i, j - 1]);
-                        }
-                    }
-                    if (j < columnCount - 1)
-                    {
-                        if (graphe[i, j + 1].typeNode == TypeNode.Libre)
-                        {
-                            graphe[i, j].AddVoisin(graphe[i, j + 1]);
-                        }
-                    }
-                }
-            }
-
-            return graphe;
-        }
-
-
-        public static NodeBis[,] LectureFichierBis(string fichier)
-        {
-            string fileContent = File.ReadAllText(fichier);
-
-            string[] lines = fileContent.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-
-            int rowCount = int.Parse(lines[0].Split(' ')[0]);
-            int columnCount = int.Parse(lines[0].Split(' ')[1]);
-
-            NodeBis[,] graphe = new NodeBis[rowCount, columnCount];
-            Console.WriteLine($"rowCount {rowCount}, columnCout {columnCount}");
-            TypeNode type;
-
-            for (int i = 1; i < lines.Length; i++)
-            {
-                string[] elements = lines[i].Split('\t');
-                for (int j = 0; j < elements.Length; j++)
-                {
-                    // Récupération du type
-                    type = (TypeNode)Enum.ToObject(typeof(TypeNode), int.Parse(elements[j]));
-                    NodeBis n = new NodeBis((i - 1) * columnCount + j,
+                    Node n = new Node((i - 1) * columnCount + j,
                                     j, i - 1, type);
                     graphe[i - 1, j] = n;
                 }

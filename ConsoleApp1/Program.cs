@@ -12,21 +12,8 @@
             //string pathBase = @"C:\Users\ma_th\Desktop\tmp\";
             string pathBase = @"C:\Users\mavilledie4\Desktop\tmp\";
 
-
-            //var graphe = CreationGraphe.LectureFichier(fichier);
-            //var astar = new Astar();
-
-            //var nodeInitial = graphe[0, 0];
-            //var nodeFinal = graphe[1, 3];
-
-            //Console.WriteLine($"depart {nodeInitial.Id} -> arrive {nodeFinal.Id}");
-
-            //astar.process(nodeInitial, nodeFinal, graphe, true, pathBase);
-
-
-            var grapheBis = CreationGraphe.LectureFichierBis(fichier);
-
-            var astarBis = new AstarBis();
+            var grapheBis = CreationGraphe.LectureFichier(fichier);
+            var astarBis = new Astar();
 
             var nodeInitial = grapheBis[0, 0];
             var nodeFinal = grapheBis[9, 9];
@@ -39,10 +26,6 @@
             {
                 Console.WriteLine(n.Id + " ");
             }
-
-
-
-
         }
     }
 }
