@@ -20,7 +20,7 @@
 
             Console.WriteLine($"depart {nodeInitial.Id} -> arrive {nodeFinal.Id}");
 
-            var chemin = astarBis.process(nodeInitial, nodeFinal, grapheBis, true, pathBase);
+            var chemin = astarBis.process(nodeInitial, nodeFinal, Distance.Euclidienne, grapheBis, true, pathBase);
 
             foreach (var n in chemin)
             {

@@ -10,7 +10,7 @@ namespace ConsoleApp1
     {
 
         /// <summary>
-        /// Distance euclidienne de n1 à n2.
+        /// Distance Euclidienne de n1 à n2.
         /// </summary>
         /// <param name="n1"></param>
         /// <param name="n2"></param>
@@ -20,6 +20,19 @@ namespace ConsoleApp1
             double x = (n2.x - n1.x);
             double y = (n2.y - n1.y);
             return Math.Sqrt(Carre(x) + Carre(y));
+        }
+
+        /// <summary>
+        /// Distance de Manhattan de n1 à n2.
+        /// </summary>
+        /// <param name="n1"></param>
+        /// <param name="n2"></param>
+        /// <returns></returns>
+        public static double Manhanttan(Node n1, Node n2)
+        {
+            double x = (n2.x - n1.x);
+            double y = (n2.y - n1.y);
+            return x + y;
         }
 
         /// <summary>

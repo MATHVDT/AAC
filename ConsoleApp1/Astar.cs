@@ -17,14 +17,25 @@ namespace ConsoleApp1
         private static readonly Color OpenColor = Color.Yellow;
         private static readonly Color ClosedColor = Color.Red;
 
-        public List<Node>? process(Node nodeInitial, Node nodeFinal,
+        /// <summary>
+        /// Calcule le chemin via l'algorithme A star.
+        /// </summary>
+        /// <param name="nodeInitial">Noeud de départ.</param>
+        /// <param name="nodeFinal">Noeud d'arrivé.</param>
+        /// <param name="Distance">Distance choisie.</param>
+        /// <param name="graphe">Matrice contenant tous les noeuds.</param>
+        /// <param name="printImage">Bool indiquant si on doit print le gif du parcours.</param>
+        /// <param name="basePath">Chemin ou le gif sera enregistré.</param>
+        /// <returns>Liste des noeuds du chemin.</returns>
+        public List<Node>? process(Node nodeInitial, Node nodeFinal, Func<Node, Node, double> Distance,
                                       Node[,] graphe, bool printImage = false, string basePath = @"C:\Users\ma_th\Desktop\")
         {
             var toSearch = new List<Node>() { nodeInitial }; // Noeud à chercher
             var processed = new List<Node>(); // Noeud deja traite
 
-            int cpt = 0;
+            int cpt = 0; // Compteur pour nommer les images
 
+            // Tant qu'il y a des noeuds potentiel
             while (toSearch.Any())
             {
                 // Recuperation du meilleur noeud
@@ -32,17 +43,19 @@ namespace ConsoleApp1
                 foreach (var t in toSearch)
                     if (t.Cout_f < current.Cout_f || t.Cout_f == current.Cout_f && t.Cout_h < current.Cout_h) current = t;
 
-                processed.Add(current);
-                toSearch.Remove(current);
 
+                toSearch.Remove(current);
+                processed.Add(current);
                 current.ColorCase = ClosedColor;
 
+                // Arrive a la fin
                 if (current == nodeFinal)
-                { // Arrive a la fin
-                    var currentNode = nodeFinal;
-                    var chemin = new List<Node>();
+                { 
+                    var currentNode = nodeFinal; // Recuperer le noeud de fin
+                    var chemin = new List<Node>(); // Cree la liste des noeuds
                     currentNode.ColorCase = PathColor;
 
+                    // Remonte jusqu'au noeud inital avec les parents
                     while (currentNode != nodeInitial)
                     {
                         chemin.Add(currentNode);
@@ -54,35 +67,41 @@ namespace ConsoleApp1
                     }
 
                     if (printImage)
-                    {
+                    { // Creer l'animation gif
                         AffichageGraphe.SaveImage(graphe, 50, basePath + "astar" + cpt + ".png");
                         AffichageGraphe.ImageToGif(basePath);
                         ++cpt;
                     }
-                    chemin.Reverse();
+                    chemin.Reverse(); // Remet le chemin dans le bon sens
                     return chemin;
                 }
 
+                // Pour chaque voisin du noeud courant, 
+                // qui n'est pas un obstacle
+                // qui n'est pas deja dans les noeuds traites
                 foreach (var neighbor in current.GetNodesVoisins().Where(t => t.typeNode != TypeNode.Obstacle && !processed.Contains(t)))
                 {
-                    var inSearch = toSearch.Contains(neighbor);
+                    var inSearch = toSearch.Contains(neighbor); 
 
-                    var costToNeighbor = current.Cout_g + Distance.Euclidienne(current, neighbor);
+                    // Calcul de son nouveau cout
+                    var costToNeighbor = current.Cout_g + Distance(current, neighbor);
 
+                    // Pas dans la liste des noeuds a chercher (et pas dans la liste des noeuds traite => jamais vue)
+                    // Meilleur que le cout precedent calcule
                     if (!inSearch || costToNeighbor < neighbor.Cout_g)
-                    {
+                    { 
                         neighbor.Cout_g = costToNeighbor;
                         neighbor.Parent = current;
 
-                        if (!inSearch)
+                        if (!inSearch) // Noeud jamais vue
                         {
-                            neighbor.Cout_h = Distance.Euclidienne(neighbor, nodeFinal);
-                            toSearch.Add(neighbor);
+                            neighbor.Cout_h = Distance(neighbor, nodeFinal);
+                            toSearch.Add(neighbor); // Ajout dans la liste a traiter
                             neighbor.ColorCase = OpenColor;
                         }
                     }
                 }
-
+                // Print un image du graphe apres l'iteration
                 if (printImage)
                 {
                     AffichageGraphe.SaveImage(graphe, 50, basePath + "astar" + cpt + ".png");

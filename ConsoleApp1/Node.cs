@@ -61,11 +61,6 @@ namespace ConsoleApp1
         /// </summary>
         /// <param name="lvlDetail">Inutile pour l'instance.</param>
         /// <returns></returns>
-        public List<Node> GetNodesVoisins(int lvlDetail = 0)
-        {
-            return _voisins;
-
-
-        }
+        public List<Node> GetNodesVoisins(int lvlDetail = 0) { return _voisins; }
     }
 }
