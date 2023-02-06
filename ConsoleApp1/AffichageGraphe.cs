@@ -88,7 +88,20 @@ namespace ConsoleApp1
         public static void ImageToGif(string directory)
         {
             // Récupérer toutes les images au format "astarX.png"
-            string[] imageFiles = Directory.GetFiles(directory, "astar*.png");
+            string[] imageFilesTab = Directory.GetFiles(directory, "astar*.png");
+            int nbFichiers = Directory.GetFiles(directory).Length;
+
+            List<string> imageFiles = new List<string>();
+            for (int i = 0; i < nbFichiers - 1; i++)
+            {
+                imageFiles.Add(directory + "astar" + i + ".png");
+            }
+
+
+            foreach (var p in imageFiles)
+            {
+                Console.WriteLine(p);
+            }
 
             // Créer un GIF à partir des images
             using (MagickImageCollection collection = new MagickImageCollection())
@@ -96,8 +109,9 @@ namespace ConsoleApp1
                 foreach (string imageFile in imageFiles)
                 {
                     collection.Add(new MagickImage(imageFile));
-                    collection[collection.Count - 1].AnimationDelay = 50;
+                    collection[collection.Count - 1].AnimationDelay = 25;
                 }
+                collection[collection.Count - 1].AnimationDelay = 75;
 
 
                 // Optionally reduce colors
@@ -107,14 +121,13 @@ namespace ConsoleApp1
                 collection.Optimize();
                 string animationPath = directory + "animation.gif";
                 collection.Write(animationPath);
-                //collection.wai
             }
-            
+
             // Supprimer les images originales
-            //foreach (string imageFile in imageFiles)
-            //{
-            //    File.Delete(imageFile);
-            //}
+            foreach (string imageFile in imageFiles)
+            {
+                File.Delete(imageFile);
+            }
         }
     }
 

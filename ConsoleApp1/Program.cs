@@ -6,10 +6,11 @@
         {
             Console.WriteLine("Hello, World!");
 
-            string fichier = @"C:\Users\ma_th\Documents\GitHub\Algorithmique_avanc-e_et_complexe\ConsoleApp1\Grille.txt";
+            //string fichier = @"C:\Users\ma_th\Documents\GitHub\Algorithmique_avanc-e_et_complexe\ConsoleApp1\Grille.txt";
+            string fichier = @"C:\Users\mavilledie4\source\repos\Algorithmique_avancée_et_complexe\ConsoleApp1\Grille.txt";
 
-
-            string pathBase = @"C:\Users\ma_th\Desktop\tmp\";
+            //string pathBase = @"C:\Users\ma_th\Desktop\tmp\";
+            string pathBase = @"C:\Users\mavilledie4\Desktop\tmp\";
 
 
             //var graphe = CreationGraphe.LectureFichier(fichier);
@@ -28,7 +29,7 @@
             var astarBis = new AstarBis();
 
             var nodeInitial = grapheBis[0, 0];
-            var nodeFinal = grapheBis[1, 3];
+            var nodeFinal = grapheBis[9, 9];
 
             Console.WriteLine($"depart {nodeInitial.Id} -> arrive {nodeFinal.Id}");
 
