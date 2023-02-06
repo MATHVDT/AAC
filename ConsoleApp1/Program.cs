@@ -16,7 +16,7 @@
             var astarBis = new Astar();
 
             var nodeInitial = grapheBis[0, 0];
-            var nodeFinal = grapheBis[9, 9];
+            var nodeFinal = grapheBis[6, 10];
 
             Console.WriteLine($"depart {nodeInitial.Id} -> arrive {nodeFinal.Id}");
 

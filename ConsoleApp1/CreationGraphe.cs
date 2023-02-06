@@ -18,7 +18,7 @@ namespace ConsoleApp1
             int columnCount = int.Parse(lines[0].Split(' ')[1]);
 
             Node[,] graphe = new Node[rowCount, columnCount];
-            Console.WriteLine($"rowCount {rowCount}, columnCout {columnCount}");
+            Console.WriteLine($"rowCount {rowCount}, columnCout {columnCount}, lines.Length:{lines.Length}");
             TypeNode type;
 
             for (int i = 1; i < lines.Length; i++)

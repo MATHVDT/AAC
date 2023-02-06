@@ -75,11 +75,13 @@ namespace ConsoleApp1
 
                         Brush brush = new SolidBrush(n.ColorCase);
 
-                        g.FillRectangle(brush, i * nodeSize, j * nodeSize, nodeSize, nodeSize);
+                        g.FillRectangle(brush, j * nodeSize, i * nodeSize, nodeSize, nodeSize);
                     }
                 }
             }
 
+
+            Console.WriteLine($" graphe.GetLength(0):{graphe.GetLength(0)},  graphe.GetLength(1):{graphe.GetLength(1)}");
             // Enregistrer l'image
             bmp.Save(filePath, ImageFormat.Png);
         }
