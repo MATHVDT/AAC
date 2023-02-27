@@ -8,17 +8,29 @@ g++ *cpp -o prog.exe && ./prog.exe
 
 int main(int argc, char *argv[])
 {
+    std::string chaine;
+    std::string motif;
 
-    std::string chaine = "lalopalalali";
-    std::string motif = "lala";
+    if (argc == 3)
+    {
+        chaine = argv[1];
+        motif = argv[2];
+    }
+    else
+    {
+        chaine = "lalopalalali";
+        motif = "lala";
+    }
 
-    int res = knuth_morris_pratt(chaine, motif);
+    int res = -1;
+    // res = naif(chaine, motif);
+    res = knuth_morris_pratt(chaine, motif);
 
     std::cout << "Dans la chaine : " << chaine << std::endl;
     std::cout << "Le motif : " << motif << std::endl;
 
-    if (res = -1)
-        std::cout << "N'est pas présent.";
+    if (res == -1)
+        std::cout << "N'est pas présent. " << res;
     else
         std::cout << "Débute à la position : " << res;
 

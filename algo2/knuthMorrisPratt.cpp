@@ -1,25 +1,93 @@
 #include "knuthMorrisPratt.hpp"
 
-int knuth_morris_pratt(const std::string &chaine, const std::string &motif)
+/*
+ * Algorithme naif de recherche de motif avec 2 indices.
+ *
+ * Entree : const std::string & - chaine dans laquelle on recherche le motif
+ *          const std::string & - motif que l'on recherche dans la chaine
+ */
+int naif(const std::string &chaine,
+         const std::string &motif)
 {
+    int lenChaine = chaine.length();
+    int lenMotif = motif.length();
+
+    std::cout << "chaine : " << chaine << ", "
+              << "lenChaine : " << lenChaine << std::endl;
+
+    std::cout << "motif : " << motif << ", "
+              << "lenMotif : " << lenMotif << std::endl;
+
+    // Verifie que le motif n'est pas plus grand que la chaine
     // Verifie que le motif n'est pas null
-    if (motif == "")
+    if (lenMotif <= lenChaine || lenMotif == 0)
         return -1;
 
-    int lenChaine = chaine.size();
-    int lenMotif = motif.size();
+    int i = 0;
+    int j = 0;
 
-    std::cout << "lenChaine : " << lenChaine << std::endl;
-    std::cout << "lenMotif : " << lenMotif << std::endl;
+    while (i + j < lenChaine)
+    {
+        printf("i=%d, j=%d et chaine[i+j]=%c, motif[j]=%c\n",
+               i, j, chaine[i + j], motif[j]);
 
-    std::vector<int> r(lenMotif, 0); // Vecteur de lenMotif 0
+        // Lettres egales avec le motif
+        while (j < lenMotif &&
+               chaine[i + j] == motif[j])
+        {
+            j++; // On progresse dans le motif et la chaine
+
+            printf("i=%d, j=%d et chaine[i+j]=%c, motif[j]=%c\n",
+                   i, j, chaine[i + j], motif[j]);
+        }
+        printf("\n");
+
+        // Si l'on a atteint la fin du motif
+        // ie qu'on a trouve une correspondance
+        if (j == lenMotif)
+        {
+            std::cout << "Motif trouve a l'indice : " << i << std::endl;
+            return i; // On renvoie l'indice de debut
+        }
+
+        // Motif pas trouve a cette position
+        ++i;
+        j = 0;
+    }
+    // Motif absent du mot
+    return -1;
+}
+
+/*
+ * Algorithme de knuth_morris_pratt. (Issue de : Programmation efficace Les 128 algorithmes qu'il faut avoir compris et codés en Python au cours de sa vie)
+ *
+ * Entree : const std::string & - chaine dans laquelle on recherche le motif
+ *          const std::string & - motif que l'on recherche dans la chaine
+ */
+int knuth_morris_pratt(const std::string &chaine, const std::string &motif)
+{
+    int lenChaine = chaine.length();
+    int lenMotif = motif.length();
+
+    std::cout << "chaine : " << chaine << ", "
+              << "lenChaine : " << lenChaine << std::endl;
+
+    std::cout << "motif : " << motif << ", "
+              << "lenMotif : " << lenMotif << std::endl;
+
+    // Verifie que le motif n'est pas plus grand que la chaine
+    // Verifie que le motif n'est pas null
+    if (lenMotif > lenChaine || lenMotif == 0)
+        return -1;
+
+    // Vecteur de taille lenMotif avec la valeur 0
+    std::vector<int> r(lenMotif, 0);
     int j = -1;
     r[0] = -1;
 
+    // Affichage de r
     std::cout << "r : ";
-    for (int i = 0; i < r.size(); ++i)
-        std::cout
-            << r[i] << " ";
+    std::copy(r.begin(), r.end(), std::ostream_iterator<int>(std::cout, ""));
     std::cout << std::endl;
 
     for (int i = 1; i < lenMotif; ++i)
@@ -31,8 +99,14 @@ int knuth_morris_pratt(const std::string &chaine, const std::string &motif)
         j += 1;
         r[i] = j;
     }
-    j = 0;
+    // Affichage de r
+    std::cout << "r : ";
+    std::copy(r.begin(), r.end(), std::ostream_iterator<int>(std::cout, ""));
+    std::cout << std::endl;
 
+
+    j = 0;
+    // Parcours de la chaine
     for (int i = 0; i < lenChaine; ++i)
     {
         while (j >= 0 && chaine[i] != motif[j])
