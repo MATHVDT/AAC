@@ -90,6 +90,7 @@ int knuth_morris_pratt(const std::string &chaine, const std::string &motif)
     std::copy(r.begin(), r.end(), std::ostream_iterator<int>(std::cout, ""));
     std::cout << std::endl;
 
+    // Initialisation prefix table
     for (int i = 1; i < lenMotif; ++i)
     {
         while (j >= 0 && motif[i - 1] != motif[j])
@@ -103,7 +104,6 @@ int knuth_morris_pratt(const std::string &chaine, const std::string &motif)
     std::cout << "r : ";
     std::copy(r.begin(), r.end(), std::ostream_iterator<int>(std::cout, ""));
     std::cout << std::endl;
-
 
     j = 0;
     // Parcours de la chaine
