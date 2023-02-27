@@ -41,7 +41,7 @@ namespace ConsoleApp1
                 // Recuperation du meilleur noeud
                 var current = toSearch[0];
                 foreach (var t in toSearch)
-                    if (t.Cout_f < current.Cout_f || t.Cout_f == current.Cout_f && t.Cout_h < current.Cout_h) current = t;
+                    if (t.Cout_f < current.Cout_f || (t.Cout_f == current.Cout_f && t.Cout_h < current.Cout_h)) current = t;
 
 
                 toSearch.Remove(current);
@@ -99,6 +99,8 @@ namespace ConsoleApp1
                             toSearch.Add(neighbor); // Ajout dans la liste a traiter
                             neighbor.ColorCase = OpenColor;
                         }
+
+                        neighbor.Cout_f = neighbor.Cout_g + neighbor.Cout_h;
                     }
                 }
                 // Print un image du graphe apres l'iteration

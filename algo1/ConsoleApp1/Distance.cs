@@ -30,8 +30,8 @@ namespace ConsoleApp1
         /// <returns></returns>
         public static double Manhanttan(Node n1, Node n2)
         {
-            double x = (n2.x - n1.x);
-            double y = (n2.y - n1.y);
+            double x = Math.Abs(n2.x - n1.x);
+            double y = Math.Abs(n2.y - n1.y);
             return x + y;
         }
 
@@ -43,8 +43,8 @@ namespace ConsoleApp1
         /// <returns></returns>
         public static double Tchebychev(Node n1, Node n2)
         {
-            double x = (n2.x - n1.x);
-            double y = (n2.y - n1.y);
+            double x = Math.Abs(n2.x - n1.x);
+            double y = Math.Abs(n2.y - n1.y);
             return Math.Max(x, y);
         }
 
