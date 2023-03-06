@@ -85,11 +85,6 @@ int knuth_morris_pratt(const std::string &chaine, const std::string &motif)
     int j = -1;
     r[0] = -1;
 
-    // Affichage de r
-    std::cout << "r : ";
-    std::copy(r.begin(), r.end(), std::ostream_iterator<int>(std::cout, ""));
-    std::cout << std::endl;
-
     // Initialisation prefix table
     for (int i = 1; i < lenMotif; ++i)
     {
@@ -101,7 +96,7 @@ int knuth_morris_pratt(const std::string &chaine, const std::string &motif)
         r[i] = j;
     }
     // Affichage de r
-    std::cout << "r : ";
+    std::cout << "initialisation du tableau de décalage r : ";
     std::copy(r.begin(), r.end(), std::ostream_iterator<int>(std::cout, ""));
     std::cout << std::endl;
 
