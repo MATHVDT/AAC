@@ -4,6 +4,8 @@
 
 /*
 g++ *cpp -o prog.exe && ./prog.exe
+g++ *cpp -o prog.exe && ./prog.exe "ABC ABCDAB ABCDABCDABDE" "ABCDABD"
+
 */
 
 int main(int argc, char *argv[])

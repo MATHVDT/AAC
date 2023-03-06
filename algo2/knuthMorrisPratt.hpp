@@ -12,5 +12,6 @@ int naif(const std::string &chaine,
 int knuth_morris_pratt(const std::string &chaine,
                        const std::string &motif);
 
+void affichage(int i, int j, std::string chaine, std::string motif);
 
 #endif

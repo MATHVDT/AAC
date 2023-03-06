@@ -101,12 +101,15 @@ int knuth_morris_pratt(const std::string &chaine, const std::string &motif)
     std::cout << std::endl;
 
     j = 0;
+    int decalageAffichageMotif = 0;
     // Parcours de la chaine
     for (int i = 0; i < lenChaine; ++i)
     {
+        affichage(i, j, chaine, motif);
         while (j >= 0 && chaine[i] != motif[j])
         {
             j = r[j];
+            affichage(i, j,  chaine, motif);
         }
         j += 1;
         if (j == lenMotif)
@@ -116,4 +119,23 @@ int knuth_morris_pratt(const std::string &chaine, const std::string &motif)
     }
 
     return -1;
+}
+
+void affichage(int i, int j, std::string chaine, std::string motif)
+{
+    std::cout << std::endl;
+    std::cout << "i      :";
+    for (int k = 0; k < i; ++k)
+        std::cout << " ";
+    std::cout << "v" << std::endl;
+
+    std::cout << "chaine :";
+    std::cout << chaine << std::endl;
+
+    std::cout << "motif  :";
+    std::cout << motif << std::endl;
+    std::cout << "j      :";
+    for (int k = 0; k < j; ++k)
+        std::cout << " ";
+    std::cout << "^" << std::endl;
 }
